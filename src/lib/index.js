@@ -3,7 +3,20 @@
  * @date 2021-12-27 16:26:21
  * @description localStorage增强
  */
-import { Decrypt, Encrypt } from "./utils.js";
+import {
+  decrypt,
+  deBase64,
+  encrypt,
+  enBase64,
+  warn,
+  isWindowEvn,
+  supportStorage,
+  isSupportJson,
+  moreThenMaxStorageSize,
+  escapeRegExp,
+  supportKeyType,
+} from "./utils.js";
+import utils from "./utils.js";
 
 /**
  * constructor version
@@ -25,37 +38,123 @@ function TinyStorage({
   this.env = env;
   this.version = version;
   this.encrypt = encrypt;
+  this.encrypeKey = ""; // Encryption key
   this.allowConso = allowConso;
-  this.decimal = 10;
-  this.expireTime = 24 * 60 * 60 * 1000;
+  this.prefix = "__tiny__";
 }
 
 TinyStorage.prototype = {
   constructor: TinyStorage,
-  getItem: function() {
-
+  createKey: (key) => {
+    return `${this.prefix}${this.pordName ? "_" + this.pordName : ""}${
+      this.env ? "_" + this.env : ""
+    }${this.version ? "_" + this.version : ""}${key ? "_" + key : ""}`;
   },
-  setItem: function() {
-
+  /**
+   * get all keys
+   */
+  getKeys: function () {
+    if (!supportStorage() || !isWindowEvn()) return [];
+    const len = window.localStorage.length;
+    let keysList = [];
+    for (let i = len; i > 0; i--) {
+      const key = localStorage.key(i);
+      new RegExp(/^__tiny__/).test(key) && keysList.push(key);
+    }
+    return keysList;
   },
-  removeItem: function(params) {
-    
+  getItem: function (key) {
+    if (!isWindowEvn() || !supportStorage()) return;
+    const str = window.localStorage.getItem(this.createKey(key));
+    let val, expires;
+    try {
+      val = val && JSON.parse(str);
+      val.expiresTime < +new Date() && this.clearExpired(this.createKey(key));
+    } catch (error) {
+      warn(`current ${val} is not conformable`);
+    }
+    return;
   },
-  clearAll: function() {
-
+  /**
+   * @param {
+   *  key,
+   *  value,
+   *  time, // default cache one hour
+   * }
+   */
+  setItem: function (key, value, time = 1 * 60 * 60 * 1000, encrypeKey) {
+    if (!isWindowEvn() || !supportStorage() || isSupportJson()) return;
+    if (!supportKeyType(key) || !supportKeyType(value)) {
+      this.allowConso &&
+        warn('key and value must be one of "string", "array", "object", "Symbol", "Map"');
+      return;
+    }
+    const nkey = this.createKey(key);
+    const regVal = escapeRegExp(value);
+    const isEncrypeKey = encrypeKey || this.encrypeKey;
+    let nval =
+      this.encrypt && isEncrypeKey ? encrypt(regVal, isEncrypeKey) : regVal; // encrypt sensitive data
+    let expiresTime = +new Date() + time;
+    try {
+      this.removeItem(nkey); // before setItem clear current item
+      window.localStorage.setItem(
+        nkey,
+        JSON.stringify({
+          nkey: nval,
+          expiresTime,
+        })
+      );
+    } catch (error) {
+      if (moreThenMaxStorageSize(error)) {
+        this.allowConso &&
+          warn("storage space is full, remove item with key is" + key);
+        // delete all item with has expired
+        this.batchClearExpired();
+        // after remove, try to set again
+        try {
+          window.localStorage.setItem(
+            nkey,
+            JSON.stringify({
+              nkey: nval,
+              expiresTime,
+            })
+          );
+        } catch (error) {
+          warn(`current item is to big, key is ${key}, error info ${error}`);
+        }
+      } else {
+        warn(`can not is allow to add item`);
+      }
+    }
+  },
+  removeItem: function (key) {
+    if (!isWindowEvn() || !supportStorage()) return;
+    window.localStorage.removeItem(this.createKey(key));
+  },
+  clearAll: function () {
+    window.localStorage.clear();
   },
   /**
    * clear expired key
    */
-  clearHasExpired: function(key) {
-    
+  clearExpired: function (key) {
+    this.removeItem(key);
   },
   /**
    * batch delete expired key
    */
-  batchClearExpired: function(params) {
-    
-  }
+  batchClearExpired: function () {
+    if (!isWindowEvn() || !supportStorage()) return;
+    const keys = this.getKeys();
+    while (Array.isArray(keys) && keys.length > 0) {
+      const key = keys.length > 0 && keys.pop();
+      const expireTiem =
+        key && this.getItem(key) && JSON.parse(this.getItem(key)).expiresTime;
+      if (+new Date() > expireTiem) {
+        this.removeItem(key);
+      }
+    }
+  },
 };
 
 const EXPIRES_TIME = 1 * 24 * 60 * 60; // 过期时间
@@ -75,33 +174,6 @@ class Storage {
     this.debug = debug;
     this.encrypt = encrypt;
     this.dataTypeList = ["string", "array", "object", "Symbol", "map"];
-  }
-
-  // 日志
-  conso(...args) {
-    if (!this.debug) return;
-    console.log(...args);
-  }
-
-  // 数据类型判断
-  judgeDataType(val) {
-    const str = Object.prototype.toString.call(val);
-    const len = str.length;
-    const type = str.slice(8, len - 1).toLowerCase();
-    const bool = this.dataTypeList.includes(type);
-    return bool;
-  }
-
-  // 判断是否是合法的json字符串
-  isJsonString(str) {
-    let bool;
-    try {
-      JSON.parse(str);
-      bool = true;
-    } catch (e) {
-      bool = false;
-    }
-    return bool;
   }
 
   // 生成key

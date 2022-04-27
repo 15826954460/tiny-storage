@@ -1,14 +1,14 @@
 import CryptoJS from "crypto-js";
 const SECRET_KEY = CryptoJS.enc.Utf8.parse("tiny2022storeageBYS"); // 十六位十六进制数作为密钥
-const IK = CryptoJS.enc.Utf8.parse("tiny2022storeageBYS"); // 十六位十六进制数作为密钥偏移量
+const IK = SECRET_KEY; // 十六位十六进制数作为密钥偏移量
 
 const Utils = {
   // 解密
-  __decrypt: (word) => {
-    let encryptedHexStr = CryptoJS.enc.Hex.parse(word);
+  __decrypt: (val, secretKey) => {
+    let encryptedHexStr = CryptoJS.enc.Hex.parse(val);
     let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);
-    let decrypt = CryptoJS.AES.decrypt(srcs, SECRET_KEY, {
-      iv: IK,
+    let decrypt = CryptoJS.AES.decrypt(srcs, secretKey || SECRET_KEY, {
+      iv: secretKey || IK,
       mode: CryptoJS.mode.CBC,
       padding: CryptoJS.pad.Pkcs7,
     });
@@ -17,10 +17,10 @@ const Utils = {
   },
 
   // 加密
-  ___encrypt: (word) => {
-    let srcs = CryptoJS.enc.Utf8.parse(word);
-    let encrypted = CryptoJS.AES.encrypt(srcs, SECRET_KEY, {
-      iv: IK,
+  __encrypt: (val, secretKey) => {
+    let srcs = CryptoJS.enc.Utf8.parse(val);
+    let encrypted = CryptoJS.AES.encrypt(srcs, secretKey || SECRET_KEY, {
+      iv: secretKey || IK,
       mode: CryptoJS.mode.CBC,
       padding: CryptoJS.pad.Pkcs7,
     });
@@ -45,7 +45,7 @@ const Utils = {
   },
 
   __getCurrnetTime: () => {
-    return Math.floor(new Date().getTime() / (60 * 1000));
+    return new Date().getTime();
   },
 
   /**
@@ -108,19 +108,46 @@ const Utils = {
         val.name === "QuotaExceededError")
     );
   },
+
+  // $& means the whole matched string
+  __escapeRegExp: (string) => string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+
+  // key spport one of ["string", "array", "object", "Symbol", "map"]
+  __supportKeyType: (val) =>
+    [
+      "[object String]",
+      "[object Array]",
+      "[object Object]",
+      "[object Symbol]",
+      "[object Map]",
+    ].includes(Object.prototype.toString.call(val)),
 };
 
 const {
-  __decrypt,
-  __deBase64,
-  ___encrypt,
-  __enBase64,
-  __getCurrnetTime,
-  __supportStorage,
-  __isSupportJson,
-  __warn,
-  __isWindowEvn,
+  __decrypt: decrypt,
+  __deBase64: deBase64,
+  __encrypt: encrypt,
+  __enBase64: enBase64,
+  __warn: warn,
+  __isWindowEvn: isWindowEvn,
+  __supportStorage: supportStorage,
+  __isSupportJson: isSupportJson,
+  __moreThenMaxStorageSize: moreThenMaxStorageSize,
+  __escapeRegExp: escapeRegExp,
+  __supportKeyType: supportKeyType,
 } = Utils;
 
-export {};
+export {
+  decrypt,
+  deBase64,
+  encrypt,
+  enBase64,
+  warn,
+  isWindowEvn,
+  supportStorage,
+  isSupportJson,
+  moreThenMaxStorageSize,
+  escapeRegExp,
+  supportKeyType,
+};
 export default Utils;
