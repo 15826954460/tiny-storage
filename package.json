@@ -1,0 +1,41 @@
+{
+  "name": "tiny-storage",
+  "version": "1.0.0",
+  "description": "A lightweight localstorage npm package",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development npm run rollup",
+    "test": "cross-env NODE_ENV=test npm run rollup",
+    "build": "cross-env NODE_ENV=production npm run rollup",
+    "rollup": "rollup --config",
+    "start": "rollup -c -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/15826954460/tiny-storage.git"
+  },
+  "keywords": [
+    "localStorage",
+    "cache",
+    "local",
+    "storage"
+  ],
+  "author": "baiyunsong",
+  "license": "ISC",
+  "dependencies": {
+    "@rollup/plugin-node-resolve": "^13.1.1",
+    "crypto-js": "^4.1.1",
+    "rollup-plugin-serve": "^1.1.0",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.8",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "cross-env": "^7.0.3",
+    "rollup": "^2.55.1",
+    "rollup-plugin-uglify": "^6.0.4"
+  }
+}

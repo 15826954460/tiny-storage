@@ -1,2 +1,5 @@
-# tiny-storage
-A lightweight localstorage npm package
+#### wps-storage-sdk
+tiny-storage
+##### 引用
+##### 方法
+
