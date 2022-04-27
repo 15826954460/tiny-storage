@@ -125,29 +125,21 @@ const Utils = {
 
 const {
   __decrypt: decrypt,
-  __deBase64: deBase64,
   __encrypt: encrypt,
-  __enBase64: enBase64,
-  __warn: warn,
   __isWindowEvn: isWindowEvn,
   __supportStorage: supportStorage,
   __isSupportJson: isSupportJson,
   __moreThenMaxStorageSize: moreThenMaxStorageSize,
-  __escapeRegExp: escapeRegExp,
   __supportKeyType: supportKeyType,
 } = Utils;
 
 export {
   decrypt,
-  deBase64,
   encrypt,
-  enBase64,
-  warn,
   isWindowEvn,
   supportStorage,
   isSupportJson,
   moreThenMaxStorageSize,
-  escapeRegExp,
   supportKeyType,
 };
 export default Utils;
