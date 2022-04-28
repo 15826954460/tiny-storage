@@ -3,7 +3,7 @@
  * @date 2021-12-27 16:26:21
  * @description localStorage增强
  */
-import {
+import utils, {
   decrypt,
   encrypt,
   isWindowEvn,
@@ -13,24 +13,23 @@ import {
   supportKeyType,
   isSupportConsole,
 } from "./utils.js";
-import utils from "./utils.js";
 import { version } from "../../package.json";
 
-(function() {
+(function () {
   if (isWindowEvn() && isSupportConsole()) {
     warn(`current version ${version}`);
-  };
-})()
+  }
+})();
 
 /**
  * @param {
- *    pordName: strung 项目名称
+ *    pordName: strIng 项目名称
  *    env: string 当前环境
  *    version: 当前版本
  *    encrypt: 是否加密
  * }
  */
-function TinyStorage({
+export function TinyStorage({
   pordName = "",
   env = "prod",
   version = "",
@@ -166,5 +165,3 @@ TinyStorage.prototype = {
     }
   },
 };
-
-export default TinyStorage;

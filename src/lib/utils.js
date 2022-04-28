@@ -2,29 +2,35 @@ import CryptoJS from "crypto-js";
 const SECRET_KEY = CryptoJS.enc.Utf8.parse("tiny2022storeageBYS"); // 十六位十六进制数作为密钥
 const IK = SECRET_KEY; // 十六位十六进制数作为密钥偏移量
 
+console.log(1111);
+console.log(CryptoJS.enc);
+
 const Utils = {
   // 解密
   __decrypt: (val, secretKey) => {
-    let encryptedHexStr = CryptoJS.enc.Hex.parse(val);
-    let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);
-    let decrypt = CryptoJS.AES.decrypt(srcs, secretKey || SECRET_KEY, {
-      iv: secretKey || IK,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7,
-    });
-    let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
-    return decryptedStr.toString();
+    // const encrypted = this.__encrypt(val);
+    // const restoreBase64 = encrypted.replace(/\-/g,'+').replace(/_/g,'/');
+    // const decrypt = CryptoJS.AES.decrypt(restoreBase64, secretKey || SECRET_KEY, {
+    //   iv: secretKey || IK,
+    //   mode: CryptoJS.mode.CBC,
+    //   padding: CryptoJS.pad.Pkcs7,
+    // });
+    // const resultDecipher = CryptoJS.enc.Utf8.stringify(decrypt);
+    // return resultDecipher;
+    return 111;
   },
 
   // 加密
   __encrypt: (val, secretKey) => {
-    let srcs = CryptoJS.enc.Utf8.parse(val);
-    let encrypted = CryptoJS.AES.encrypt(srcs, secretKey || SECRET_KEY, {
-      iv: secretKey || IK,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7,
-    });
-    return encrypted.ciphertext.toString().toUpperCase();
+  //   const cipher = CryptoJS.AES.encrypt(val, secretKey || SECRET_KEY, {
+  //     iv: secretKey || IK,
+  //     mode: CryptoJS.mode.CBC,
+  //     padding: CryptoJS.pad.Pkcs7,
+  //   });
+  //   const base64Cipher = cipher.ciphertext.toString(CryptoJS.enc.Base64);
+  //   const resultCipher = base64Cipher.replace(/\+/g,'-').replace(/\//g,'_');
+  //   return resultCipher;
+    return 222;
   },
 
   __deBase64: (val) => {

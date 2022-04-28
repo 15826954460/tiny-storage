@@ -9,16 +9,14 @@ import serve from "rollup-plugin-serve";
 
 const config = {
   input: path.resolve(__dirname, "src/lib/index.js"),
-  output: [
-    {
-      file: "dist/tinystorage.umd.js", // 输出文件目录
-      format: "umd", // 输出文件格式 es6 module
-      name: "Storage",
-      globals: {
-        "crypto-js": "CryptoJS",
-      },
+  output: {
+    file: "dist/index.js", // 输出文件目录
+    format: "umd", // 输出文件格式 es6 module
+    name: "tinyStorages",
+    globals: {
+      "crypto-js": "CryptoJS",
     },
-  ],
+  },
   // 外部插件
   external: ["crypto-js"],
   plugins: [
