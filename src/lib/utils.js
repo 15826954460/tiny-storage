@@ -131,6 +131,7 @@ const {
   __isSupportJson: isSupportJson,
   __moreThenMaxStorageSize: moreThenMaxStorageSize,
   __supportKeyType: supportKeyType,
+  __isSupportConsole: isSupportConsole,
 } = Utils;
 
 export {
@@ -141,5 +142,6 @@ export {
   isSupportJson,
   moreThenMaxStorageSize,
   supportKeyType,
+  isSupportConsole,
 };
 export default Utils;

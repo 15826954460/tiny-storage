@@ -11,12 +11,19 @@ import {
   isSupportJson,
   moreThenMaxStorageSize,
   supportKeyType,
+  isSupportConsole,
 } from "./utils.js";
 import utils from "./utils.js";
+import { version } from "../../package.json";
+
+(function() {
+  if (isWindowEvn() && isSupportConsole()) {
+    warn(`current version ${version}`);
+  };
+})()
 
 /**
- * constructor version
- * @params {
+ * @param {
  *    pordName: strung 项目名称
  *    env: string 当前环境
  *    version: 当前版本
