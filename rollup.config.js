@@ -8,14 +8,14 @@ import { terser } from "rollup-plugin-terser";
 import serve from "rollup-plugin-serve";
 
 const config = {
-  input: path.resolve(__dirname, "src/lib/index.js"),
+  input: path.resolve(__dirname, "src/lib/testindex.js"),
   output: {
     file: "dist/index.js", // 输出文件目录
     format: "umd", // 输出文件格式 es6 module
-    name: "tinyStorages",
-    globals: {
-      "crypto-js": "CryptoJS",
-    },
+    name: "tinyStorage",
+    // globals: {
+    //   "crypto-js": "CryptoJS",
+    // },
   },
   // 外部插件
   external: ["crypto-js"],
@@ -55,7 +55,7 @@ if (process.env.NODE_ENV !== "production") {
     serve({
       open: true,
       openPage: "/src/demo/index.html",
-      port: 10001,
+      port: 10008,
       contentBase: "",
     })
   );
