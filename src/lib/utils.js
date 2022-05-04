@@ -2,12 +2,12 @@ import CryptoJS from "crypto-js";
 const SECRET_KEY = CryptoJS.enc.Utf8.parse("tiny2022storeageBYS"); // 十六位十六进制数作为密钥
 const IK = SECRET_KEY; // 十六位十六进制数作为密钥偏移量
 
-console.log(1111);
+console.log(4444);
 console.log(CryptoJS.enc);
 
 const Utils = {
   // 解密
-  __decrypt: (val, secretKey) => {
+  __decrypt: function (val, secretKey) {
     // const encrypted = this.__encrypt(val);
     // const restoreBase64 = encrypted.replace(/\-/g,'+').replace(/_/g,'/');
     // const decrypt = CryptoJS.AES.decrypt(restoreBase64, secretKey || SECRET_KEY, {
@@ -21,23 +21,23 @@ const Utils = {
   },
 
   // 加密
-  __encrypt: (val, secretKey) => {
-  //   const cipher = CryptoJS.AES.encrypt(val, secretKey || SECRET_KEY, {
-  //     iv: secretKey || IK,
-  //     mode: CryptoJS.mode.CBC,
-  //     padding: CryptoJS.pad.Pkcs7,
-  //   });
-  //   const base64Cipher = cipher.ciphertext.toString(CryptoJS.enc.Base64);
-  //   const resultCipher = base64Cipher.replace(/\+/g,'-').replace(/\//g,'_');
-  //   return resultCipher;
+  __encrypt: function (val, secretKey) {
+    //   const cipher = CryptoJS.AES.encrypt(val, secretKey || SECRET_KEY, {
+    //     iv: secretKey || IK,
+    //     mode: CryptoJS.mode.CBC,
+    //     padding: CryptoJS.pad.Pkcs7,
+    //   });
+    //   const base64Cipher = cipher.ciphertext.toString(CryptoJS.enc.Base64);
+    //   const resultCipher = base64Cipher.replace(/\+/g,'-').replace(/\//g,'_');
+    //   return resultCipher;
     return 222;
   },
 
-  __deBase64: (val) => {
+  __deBase64: function (val) {
     return CryptoJS.enc.Base64.parse(val);
   },
 
-  __enBase64: (val) => {
+  __enBase64: function (val) {
     return CryptoJS.enc.Base64.stringify(val);
   },
 
@@ -50,7 +50,7 @@ const Utils = {
     }
   },
 
-  __getCurrnetTime: () => {
+  __getCurrnetTime: function () {
     return new Date().getTime();
   },
 
@@ -58,7 +58,7 @@ const Utils = {
    * judge is support window.console
    * @return {boolean}
    */
-  __isSupportConsole: () => {
+  __isSupportConsole: function () {
     if ("console" in window && window.console instanceof Fcuntion) return true;
   },
 
@@ -66,7 +66,7 @@ const Utils = {
    * judge current environment
    * @return {boolean}
    */
-  __isWindowEvn: () => {
+  __isWindowEvn: function () {
     if (window) return true;
     return false;
   },
@@ -74,7 +74,7 @@ const Utils = {
   /**
    * judge support window.JSON
    */
-  __isSupportJson: () => {
+  __isSupportJson: function () {
     if (!this.__isWindowEvn()) return false;
     if (!window.JSON) return false;
     let supportFlug;
@@ -87,7 +87,7 @@ const Utils = {
     return supportFlug;
   },
 
-  __supportStorage: () => {
+  __supportStorage: function () {
     if (!this.__isWindowEvn()) return false;
     if (!("localStorage" in window)) return false;
     let supportStorage;
@@ -106,7 +106,7 @@ const Utils = {
     return supportStorage;
   },
 
-  __moreThenMaxStorageSize: (val) => {
+  __moreThenMaxStorageSize: function (val) {
     return (
       val &&
       (val.name === "QUOTA_EXCEEDED_ERR" ||
@@ -116,38 +116,21 @@ const Utils = {
   },
 
   // $& means the whole matched string
-  __escapeRegExp: (string) => string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+  __escapeRegExp: function (string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  },
+
 
   // key spport one of ["string", "array", "object", "Symbol", "map"]
-  __supportKeyType: (val) =>
-    [
+  __supportKeyType: function (val) {
+    return [
       "[object String]",
       "[object Array]",
       "[object Object]",
       "[object Symbol]",
       "[object Map]",
-    ].includes(Object.prototype.toString.call(val)),
+    ].includes(Object.prototype.toString.call(val));
+  }
 };
 
-const {
-  __decrypt: decrypt,
-  __encrypt: encrypt,
-  __isWindowEvn: isWindowEvn,
-  __supportStorage: supportStorage,
-  __isSupportJson: isSupportJson,
-  __moreThenMaxStorageSize: moreThenMaxStorageSize,
-  __supportKeyType: supportKeyType,
-  __isSupportConsole: isSupportConsole,
-} = Utils;
-
-export {
-  decrypt,
-  encrypt,
-  isWindowEvn,
-  supportStorage,
-  isSupportJson,
-  moreThenMaxStorageSize,
-  supportKeyType,
-  isSupportConsole,
-};
 export default Utils;

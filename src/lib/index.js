@@ -3,20 +3,11 @@
  * @date 2021-12-27 16:26:21
  * @description localStorage增强
  */
-import utils, {
-  decrypt,
-  encrypt,
-  isWindowEvn,
-  supportStorage,
-  isSupportJson,
-  moreThenMaxStorageSize,
-  supportKeyType,
-  isSupportConsole,
-} from "./utils.js";
+import utils from "./utils.js";
 import { version } from "../../package.json";
 
 (function () {
-  if (isWindowEvn() && isSupportConsole()) {
+  if (utils.isWindowEvn() && utils.isSupportConsole()) {
     warn(`current version ${version}`);
   }
 })();
@@ -48,16 +39,15 @@ export function TinyStorage({
 
 TinyStorage.prototype = {
   constructor: TinyStorage,
-  createKey: (key) => {
-    return `${this.prefix}${this.pordName ? "_" + this.pordName : ""}${
-      this.env ? "_" + this.env : ""
-    }${this.version ? "_" + this.version : ""}${key ? "_" + key : ""}`;
+  createKey: function (key) {
+    return `${this.prefix}${this.pordName ? "_" + this.pordName : ""}${this.env ? "_" + this.env : ""
+      }${this.version ? "_" + this.version : ""}${key ? "_" + key : ""}`;
   },
   /**
    * get all keys
    */
   getKeys: function () {
-    if (!supportStorage() || !isWindowEvn()) return [];
+    if (!utils.supportStorage() || !utils.isWindowEvn()) return [];
     const len = window.localStorage.length;
     let keysList = [];
     for (let i = len; i > 0; i--) {
@@ -67,7 +57,7 @@ TinyStorage.prototype = {
     return keysList;
   },
   getItem: function (key, encrypeKey) {
-    if (!isWindowEvn() || !supportStorage()) return;
+    if (!utils.isWindowEvn() || !utils.supportStorage()) return;
     const newkey = this.createKey(key);
     const str = window.localStorage.getItem(newkey);
     let val;
@@ -78,7 +68,7 @@ TinyStorage.prototype = {
         this.clearExpired(this.createKey(key));
       } else {
         encrypeKey = encrypeKey || this.encrypeKey;
-        val = encrypeKey ? decrypt(val[newkey], encrypeKey) : val;
+        val = encrypeKey ? utils.decrypt(val[newkey], encrypeKey) : val;
       }
     } catch (error) {
       utils.warn(`current ${val} is not conformable`);
@@ -93,8 +83,8 @@ TinyStorage.prototype = {
    * }
    */
   setItem: function (key, value, time, encrypeKey) {
-    if (!isWindowEvn() || !supportStorage() || isSupportJson()) return;
-    if (!supportKeyType(key) || !supportKeyType(value)) {
+    if (!utils.isWindowEvn() || !utils.supportStorage() || utils.isSupportJson()) return;
+    if (!utils.supportKeyType(key) || !utils.supportKeyType(value)) {
       this.allowConso &&
         utils.warn(
           'key and value must be one of "string", "array", "object", "Symbol", "Map"'
@@ -104,7 +94,7 @@ TinyStorage.prototype = {
     const nkey = this.createKey(key);
     const isEncrypeKey = encrypeKey || this.encrypeKey;
     let nval =
-      this.encrypt && isEncrypeKey ? encrypt(value, isEncrypeKey) : value; // encrypt sensitive data
+      this.encrypt && isEncrypeKey ? utils.encrypt(value, isEncrypeKey) : value; // encrypt sensitive data
     let expiresTime = +new Date() + (time || this.catchTime);
     try {
       this.removeItem(nkey); // before setItem clear current item
@@ -116,7 +106,7 @@ TinyStorage.prototype = {
         })
       );
     } catch (error) {
-      if (moreThenMaxStorageSize(error)) {
+      if (utils.moreThenMaxStorageSize(error)) {
         this.allowConso &&
           utils.warn("storage space is full, remove item with key is" + key);
         // delete all item with has expired
@@ -141,7 +131,7 @@ TinyStorage.prototype = {
     }
   },
   removeItem: function (key) {
-    if (!isWindowEvn() || !supportStorage()) return;
+    if (!utils.isWindowEvn() || !utils.supportStorage()) return;
     window.localStorage.removeItem(this.createKey(key));
   },
   clearAll: function () {
@@ -157,7 +147,7 @@ TinyStorage.prototype = {
    * batch delete expired key
    */
   batchClearExpired: function () {
-    if (!isWindowEvn() || !supportStorage()) return;
+    if (!utils.isWindowEvn() || !utils.supportStorage()) return;
     const keys = this.getKeys();
     while (Array.isArray(keys) && keys.length > 0) {
       const key = keys.length > 0 && keys.pop();
