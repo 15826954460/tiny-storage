@@ -8,7 +8,7 @@ import { terser } from "rollup-plugin-terser";
 import serve from "rollup-plugin-serve";
 
 const config = {
-  input: path.resolve(__dirname, "src/lib/index.js"),
+  input: path.resolve(__dirname, "src/lib/utils.js"),
   output: {
     file: "dist/index.js", // 输出文件目录
     format: "umd", // 输出文件格式 es6 module
@@ -44,14 +44,15 @@ const config = {
       preferConst: true,
     }),
     terser(),
+    nodeResolve({
+      browser: true,
+    }),
   ],
+  strict: true,
 };
 
 if (process.env.NODE_ENV !== "production") {
   config.plugins.push(
-    nodeResolve({
-      mainFields: ["browser", "jsnext:main", "module", "main"],
-    }),
     serve({
       open: true,
       openPage: "/src/demo/index.html",
