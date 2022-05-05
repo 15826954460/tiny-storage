@@ -7,7 +7,7 @@ import utils from "./utils.js";
 import { version } from "../../package.json";
 
 if (utils.isWindowEvn() && utils.isSupportConsole()) {
-  utils.warn(`current version ${version}`);
+  utils.log(`current version ${version}`);
 }
 
 /**
@@ -18,7 +18,7 @@ if (utils.isWindowEvn() && utils.isSupportConsole()) {
  *    encrypt: 是否加密
  * }
  */
-export function TinyStorage({
+function TinyStorage({
   pordName = "",
   env = "prod",
   version = "",
@@ -38,8 +38,9 @@ export function TinyStorage({
 TinyStorage.prototype = {
   constructor: TinyStorage,
   createKey: function (key) {
-    return `${this.prefix}${this.pordName ? "_" + this.pordName : ""}${this.env ? "_" + this.env : ""
-      }${this.version ? "_" + this.version : ""}${key ? "_" + key : ""}`;
+    return `${this.prefix}${this.pordName ? "_" + this.pordName : ""}${
+      this.env ? "_" + this.env : ""
+    }${this.version ? "_" + this.version : ""}${key ? "_" + key : ""}`;
   },
   /**
    * get all keys
@@ -65,7 +66,8 @@ TinyStorage.prototype = {
       if (val.expiresTime < +new Date()) {
         this.clearExpired(this.createKey(key));
       } else {
-        encrypeKey = encrypeKey || this.encrypeKey;
+        // encrypeKey = encrypeKey || this.encrypeKey;
+        encrypeKey = undefined;
         val = encrypeKey ? utils.decrypt(val[newkey], encrypeKey) : val;
       }
     } catch (error) {
@@ -81,7 +83,12 @@ TinyStorage.prototype = {
    * }
    */
   setItem: function (key, value, time, encrypeKey) {
-    if (!utils.isWindowEvn() || !utils.supportStorage() || utils.isSupportJson()) return;
+    if (
+      !utils.isWindowEvn() ||
+      !utils.supportStorage() ||
+      utils.isSupportJson()
+    )
+      return;
     if (!utils.supportKeyType(key) || !utils.supportKeyType(value)) {
       this.allowConso &&
         utils.warn(
@@ -90,7 +97,8 @@ TinyStorage.prototype = {
       return;
     }
     const nkey = this.createKey(key);
-    const isEncrypeKey = encrypeKey || this.encrypeKey;
+    // const isEncrypeKey = encrypeKey || this.encrypeKey;
+    const isEncrypeKey = undefined;
     let nval =
       this.encrypt && isEncrypeKey ? utils.encrypt(value, isEncrypeKey) : value; // encrypt sensitive data
     let expiresTime = +new Date() + (time || this.catchTime);
@@ -153,3 +161,5 @@ TinyStorage.prototype = {
     }
   },
 };
+
+export default TinyStorage;
