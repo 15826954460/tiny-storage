@@ -1,6 +1,6 @@
 {
-  "name": "tiny-storage",
-  "version": "1.0.0",
+  "name": "simple-easy-local-storage",
+  "version": "1.0.1",
   "description": "A lightweight localstorage npm package",
   "main": "dist/index.js",
   "type": "module",

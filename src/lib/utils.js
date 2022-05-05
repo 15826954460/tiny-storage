@@ -4,8 +4,8 @@ const IK = SECRET_KEY; // 十六位十六进制数作为密钥偏移量
 
 const Utils = {
   // 解密
-  __decrypt: function (val, secretKey) {
-    const encrypted = this.__encrypt(val);
+  decrypt: function (val, secretKey) {
+    const encrypted = this.encrypt(val);
     const restoreBase64 = encrypted.replace(/\-/g, '+').replace(/_/g, '/');
     const decrypt = CryptoJS.AES.decrypt(restoreBase64, secretKey || SECRET_KEY, {
       iv: secretKey || IK,
@@ -17,7 +17,7 @@ const Utils = {
   },
 
   // 加密
-  __encrypt: function (val, secretKey) {
+  encrypt: function (val, secretKey) {
     const cipher = CryptoJS.AES.encrypt(val, secretKey || SECRET_KEY, {
       iv: secretKey || IK,
       mode: CryptoJS.mode.CBC,
@@ -28,24 +28,24 @@ const Utils = {
     return resultCipher;
   },
 
-  __deBase64: function (val) {
+  deBase64: function (val) {
     return CryptoJS.enc.Base64.parse(val);
   },
 
-  __enBase64: function (val) {
+  enBase64: function (val) {
     return CryptoJS.enc.Base64.stringify(val);
   },
 
   /**
    * print log
    */
-  __warn: function (msg) {
-    if (this.__isWindowEvn() && this.__isSupportConsole()) {
+  warn: function (msg) {
+    if (this.isWindowEvn() && this.isSupportConsole()) {
       window.console.warn(`${msg}`);
     }
   },
 
-  __getCurrnetTime: function () {
+  getCurrnetTime: function () {
     return new Date().getTime();
   },
 
@@ -53,7 +53,7 @@ const Utils = {
    * judge is support window.console
    * @return {boolean}
    */
-  __isSupportConsole: function () {
+  isSupportConsole: function () {
     if ("console" in window && window.console instanceof Fcuntion) return true;
   },
 
@@ -61,7 +61,7 @@ const Utils = {
    * judge current environment
    * @return {boolean}
    */
-  __isWindowEvn: function () {
+  isWindowEvn: function () {
     if (window) return true;
     return false;
   },
@@ -69,8 +69,8 @@ const Utils = {
   /**
    * judge support window.JSON
    */
-  __isSupportJson: function () {
-    if (!this.__isWindowEvn()) return false;
+  isSupportJson: function () {
+    if (!this.isWindowEvn()) return false;
     if (!window.JSON) return false;
     let supportFlug;
     try {
@@ -82,8 +82,8 @@ const Utils = {
     return supportFlug;
   },
 
-  __supportStorage: function () {
-    if (!this.__isWindowEvn()) return false;
+  supportStorage: function () {
+    if (!this.isWindowEvn()) return false;
     if (!("localStorage" in window)) return false;
     let supportStorage;
     const TEST_KEY = "text_key";
@@ -91,7 +91,7 @@ const Utils = {
       localStorage.setItem(TEST_KEY, "testValue");
       supportStorage = true;
     } catch (error) {
-      if (this.__moreThenMaxStorageSize(error) && localStorage.length) {
+      if (this.moreThenMaxStorageSize(error) && localStorage.length) {
         supportStorage = true;
       } else {
         supportStorage = false;
@@ -101,7 +101,7 @@ const Utils = {
     return supportStorage;
   },
 
-  __moreThenMaxStorageSize: function (val) {
+  moreThenMaxStorageSize: function (val) {
     return (
       val &&
       (val.name === "QUOTA_EXCEEDED_ERR" ||
@@ -111,13 +111,13 @@ const Utils = {
   },
 
   // $& means the whole matched string
-  __escapeRegExp: function (string) {
+  escapeRegExp: function (string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   },
 
 
   // key spport one of ["string", "array", "object", "Symbol", "map"]
-  __supportKeyType: function (val) {
+  supportKeyType: function (val) {
     return [
       "[object String]",
       "[object Array]",
