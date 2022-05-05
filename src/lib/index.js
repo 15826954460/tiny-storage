@@ -6,11 +6,9 @@
 import utils from "./utils.js";
 import { version } from "../../package.json";
 
-(function () {
-  if (utils.isWindowEvn() && utils.isSupportConsole()) {
-    utils.warn(`current version ${version}`);
-  }
-})();
+if (utils.isWindowEvn() && utils.isSupportConsole()) {
+  utils.warn(`current version ${version}`);
+}
 
 /**
  * @param {

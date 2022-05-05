@@ -6,12 +6,16 @@ const Utils = {
   // 解密
   decrypt: function (val, secretKey) {
     const encrypted = this.encrypt(val);
-    const restoreBase64 = encrypted.replace(/\-/g, '+').replace(/_/g, '/');
-    const decrypt = CryptoJS.AES.decrypt(restoreBase64, secretKey || SECRET_KEY, {
-      iv: secretKey || IK,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7,
-    });
+    const restoreBase64 = encrypted.replace(/\-/g, "+").replace(/_/g, "/");
+    const decrypt = CryptoJS.AES.decrypt(
+      restoreBase64,
+      secretKey || SECRET_KEY,
+      {
+        iv: secretKey || IK,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      }
+    );
     const resultDecipher = CryptoJS.enc.Utf8.stringify(decrypt);
     return resultDecipher;
   },
@@ -24,7 +28,7 @@ const Utils = {
       padding: CryptoJS.pad.Pkcs7,
     });
     const base64Cipher = cipher.ciphertext.toString(CryptoJS.enc.Base64);
-    const resultCipher = base64Cipher.replace(/\+/g, '-').replace(/\//g, '_');
+    const resultCipher = base64Cipher.replace(/\+/g, "-").replace(/\//g, "_");
     return resultCipher;
   },
 
@@ -41,7 +45,7 @@ const Utils = {
    */
   warn: function (msg) {
     if (this.isWindowEvn() && this.isSupportConsole()) {
-      window.console.warn(`${msg}`);
+      msg && window.console.warn(`${msg}`);
     }
   },
 
@@ -54,7 +58,11 @@ const Utils = {
    * @return {boolean}
    */
   isSupportConsole: function () {
-    if ("console" in window && window.console instanceof Fcuntion) return true;
+    if ("console" in window && window.console instanceof Function) {
+      return true;
+    } else {
+      return false;
+    }
   },
 
   /**
@@ -115,7 +123,6 @@ const Utils = {
     return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   },
 
-
   // key spport one of ["string", "array", "object", "Symbol", "map"]
   supportKeyType: function (val) {
     return [
@@ -125,7 +132,7 @@ const Utils = {
       "[object Symbol]",
       "[object Map]",
     ].includes(Object.prototype.toString.call(val));
-  }
+  },
 };
 
 export default Utils;
