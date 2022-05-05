@@ -8,7 +8,7 @@ import { version } from "../../package.json";
 
 (function () {
   if (utils.isWindowEvn() && utils.isSupportConsole()) {
-    warn(`current version ${version}`);
+    utils.warn(`current version ${version}`);
   }
 })();
 
