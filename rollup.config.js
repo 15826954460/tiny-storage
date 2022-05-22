@@ -13,12 +13,10 @@ const config = {
     file: "dist/index.js", // 输出文件目录
     format: "umd", // 输出文件格式 es6 module
     name: "tiny-storage",
-    globals: {
-      "crypto-js": "CryptoJS",
-    },
+    globals: {},
   },
   // 外部插件
-  external: ["crypto-js"],
+  external: [],
   plugins: [
     commonjs(),
     babel({
