@@ -1,3 +1,4 @@
 *.js
 src/
 node_modules/
+demo/

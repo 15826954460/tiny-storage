@@ -1,45 +1,7 @@
-// import CryptoJS from "crypto-js";
-// const SECRET_KEY = CryptoJS.enc.Utf8.parse("tiny2022storeageBYS"); // 十六位十六进制数作为密钥
-// const IK = SECRET_KEY; // 十六位十六进制数作为密钥偏移量
-
+/**
+ * 工具类方法
+ */
 const Utils = {
-  // 解密
-  decrypt: function (val, secretKey) {
-    // const encrypted = this.encrypt(val);
-    // const restoreBase64 = encrypted.replace(/\-/g, "+").replace(/_/g, "/");
-    // const decrypt = CryptoJS.AES.decrypt(
-    //   restoreBase64,
-    //   secretKey || SECRET_KEY,
-    //   {
-    //     iv: secretKey || IK,
-    //     mode: CryptoJS.mode.CBC,
-    //     padding: CryptoJS.pad.Pkcs7,
-    //   }
-    // );
-    // const resultDecipher = CryptoJS.enc.Utf8.stringify(decrypt);
-    // return resultDecipher;
-  },
-
-  // 加密
-  encrypt: function (val, secretKey) {
-    // const cipher = CryptoJS.AES.encrypt(val, secretKey || SECRET_KEY, {
-    //   iv: secretKey || IK,
-    //   mode: CryptoJS.mode.CBC,
-    //   padding: CryptoJS.pad.Pkcs7,
-    // });
-    // const base64Cipher = cipher.ciphertext.toString(CryptoJS.enc.Base64);
-    // const resultCipher = base64Cipher.replace(/\+/g, "-").replace(/\//g, "_");
-    // return resultCipher;
-  },
-
-  deBase64: function (val) {
-    return CryptoJS.enc.Base64.parse(val);
-  },
-
-  enBase64: function (val) {
-    return CryptoJS.enc.Base64.stringify(val);
-  },
-
   /**
    * print log
    */

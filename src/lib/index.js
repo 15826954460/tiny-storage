@@ -4,10 +4,10 @@
  * @description localStorage增强
  */
 import utils from "./utils.js";
-import { version } from "../../package.json";
+import { version, name } from "../../package.json";
 
 if (utils.isWindowEvn() && utils.isSupportConsole()) {
-  utils.log(`current version ${version}`);
+  utils.log(`${name} version ${version}`);
 }
 
 /**
@@ -15,21 +15,17 @@ if (utils.isWindowEvn() && utils.isSupportConsole()) {
  *    pordName: strIng 项目名称
  *    env: string 当前环境
  *    version: 当前版本
- *    encrypt: 是否加密
  * }
  */
 function TinyStorage({
   pordName = "",
   env = "prod",
   version = "",
-  encrypt = false,
   allowConso = false,
 } = {}) {
   this.pordName = pordName;
   this.env = env;
   this.version = version;
-  this.encrypt = encrypt;
-  this.encrypeKey = ""; // Encryption key
   this.allowConso = allowConso;
   this.prefix = "__tiny__";
   this.catchTime = 1 * 60 * 60 * 1000;
@@ -55,7 +51,7 @@ TinyStorage.prototype = {
     }
     return keysList;
   },
-  getItem: function (key, encrypeKey) {
+  getItem: function (key) {
     if (!utils.isWindowEvn() || !utils.supportStorage()) return;
     const newkey = this.createKey(key);
     const str = window.localStorage.getItem(newkey);
@@ -65,10 +61,6 @@ TinyStorage.prototype = {
       // expired
       if (val.expiresTime < +new Date()) {
         this.clearExpired(this.createKey(key));
-      } else {
-        // encrypeKey = encrypeKey || this.encrypeKey;
-        encrypeKey = undefined;
-        val = encrypeKey ? utils.decrypt(val[newkey], encrypeKey) : val;
       }
     } catch (error) {
       utils.warn(`current ${val} is not conformable`);
@@ -82,7 +74,7 @@ TinyStorage.prototype = {
    *  time, // default cache one hour
    * }
    */
-  setItem: function (key, value, time, encrypeKey) {
+  setItem: function (key, value, time) {
     if (
       !utils.isWindowEvn() ||
       !utils.supportStorage() ||
@@ -97,17 +89,13 @@ TinyStorage.prototype = {
       return;
     }
     const nkey = this.createKey(key);
-    // const isEncrypeKey = encrypeKey || this.encrypeKey;
-    const isEncrypeKey = undefined;
-    let nval =
-      this.encrypt && isEncrypeKey ? utils.encrypt(value, isEncrypeKey) : value; // encrypt sensitive data
     let expiresTime = +new Date() + (time || this.catchTime);
     try {
       this.removeItem(nkey); // before setItem clear current item
       window.localStorage.setItem(
         nkey,
         JSON.stringify({
-          nkey: nval,
+          nkey: value,
           expiresTime,
         })
       );
@@ -122,7 +110,7 @@ TinyStorage.prototype = {
           window.localStorage.setItem(
             nkey,
             JSON.stringify({
-              nkey: nval,
+              nkey: value,
               expiresTime,
             })
           );
