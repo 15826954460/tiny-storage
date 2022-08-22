@@ -1,24 +1,27 @@
 /**
- * 工具类方法
+ * @author bys
+ * @date 2022-07-14 14:36:02
+ * @description 工具类，检测环境
+ * @param
  */
-const Utils = {
-  /**
-   * print log
-   */
+
+const utils = {
+  // 日志打印warn
   warn: function (msg) {
     if (this.isWindowEvn() && this.isSupportConsole()) {
       msg && window.console.warn(`${msg}`);
     }
   },
 
-  log: function(msg) {
+  // 日志打印
+  log: function (msg) {
     if (this.isWindowEvn() && this.isSupportConsole()) {
       msg && window.console.log(`${msg}`);
     }
   },
 
   getCurrnetTime: function () {
-    return new Date().getTime();
+    return +new Date();
   },
 
   /**
@@ -26,7 +29,10 @@ const Utils = {
    * @return {boolean}
    */
   isSupportConsole: function () {
-    if ("console" in window && (window.console.log && window.console.warn) instanceof Function) {
+    if (
+      "console" in window &&
+      (window.console.log && window.console.warn) instanceof Function
+    ) {
       return true;
     } else {
       return false;
@@ -64,16 +70,16 @@ const Utils = {
     let supportStorage;
     const TEST_KEY = "text_key";
     try {
-      localStorage.setItem(TEST_KEY, "testValue");
+      window.localStorage.setItem(TEST_KEY, "testValue");
       supportStorage = true;
     } catch (error) {
-      if (this.moreThenMaxStorageSize(error) && localStorage.length) {
+      if (this.moreThenMaxStorageSize(error) && window.localStorage.length) {
         supportStorage = true;
       } else {
         supportStorage = false;
       }
     }
-    supportStorage && localStorage.removeItem(TEST_KEY);
+    supportStorage && window.localStorage.removeItem(TEST_KEY);
     return supportStorage;
   },
 
@@ -92,15 +98,23 @@ const Utils = {
   },
 
   // key spport one of ["string", "array", "object", "Symbol", "map"]
-  supportKeyType: function (val) {
+  supportKeyType: function (val, dataType = []) {
+    // '[object String]'
     return [
-      "[object String]",
-      "[object Array]",
-      "[object Object]",
-      "[object Symbol]",
-      "[object Map]",
-    ].includes(Object.prototype.toString.call(val));
+      "String",
+      "Array",
+      "Object",
+      "Symbol",
+      "Map",
+      "Number",
+      ...dataType,
+    ].includes(
+      Object.prototype.toString
+        .call(val)
+        .replace(/["|'|[|\]]/g, "")
+        .split(" ")[1]
+    );
   },
 };
 
-export default Utils;
+export default utils;

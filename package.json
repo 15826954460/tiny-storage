@@ -1,5 +1,5 @@
 {
-  "name": "simple-easy-localstorage",
+  "name": "simple-easy-local-storage",
   "version": "1.0.6",
   "description": "A lightweight localstorage npm package",
   "main": "dist/index.js",
