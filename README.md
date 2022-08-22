@@ -1,16 +1,19 @@
 #### wps-storage-sdk
 
-wps-storage-sdk
+simple-easy-local-storage
 
 #### 安装
 
-设置海外私有源
+设置镜像源
 
 ```sh
-# 方式一:
-npm set @wps:registry http://npm.4wps.net
-# 方式二: 项目根目录添加 .npmrc 文件,添加如下配置
-@wps:registry=http://npm.4wps.net
+#### npm、yarn查看和更换镜像源
+- npm/yarn config get registry // 查看当前镜像源
+- npm/yarn config set registry https://registry.npmjs.org // 设置npm镜像源
+
+#### 项目部署
+- npm login
+- npm publish
 ```
 
 #### 项目使用
@@ -18,7 +21,7 @@ npm set @wps:registry http://npm.4wps.net
 ##### 引用
 
 ```js
-import TinyStorage from "@wpsovs/wps-tiny-storage";
+import TinyStorage from "simple-easy-local-storage";
 const storage = new TinyStorage({
   // ...options
 });
