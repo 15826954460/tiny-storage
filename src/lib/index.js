@@ -3,7 +3,7 @@
  * @date 2022-07-14 14:43:37
  * @description 自定义LocalStorage
  */
-import utils from "./storage-utils.js";
+import utils from "./utils.js";
 
 const STORATE_TYPE_LIST = ["sessionStorage", "localStorage"];
 const LOCAL_STORAGE = "localStorage";
